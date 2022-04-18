@@ -20,11 +20,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
-      imagePullSecrets:
-      - name: docker-registry-secret
-      #- name: $KUBERNETES_SECRET_NAME
-      #nodeSelector:
-        #key: docker-desktop
 ---
 apiVersion: v1
 kind: Service

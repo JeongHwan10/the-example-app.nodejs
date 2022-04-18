@@ -14,7 +14,7 @@ pipeline {
 		ProjectName='git-nodejs'
 		
 		DockerUserName='wjdghks1057'
-		registryUrl = "https://hub.docker.com/"
+		registryUrl = "https://docker.io/"
 		registryCredential = 'docker-hub'
 	}
 	
