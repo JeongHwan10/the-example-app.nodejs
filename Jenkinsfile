@@ -24,7 +24,7 @@ pipeline {
 				 /* Checkout environment */
 				 gitCredentialsId = 'gitToken'
 				 githubUrl = 'https://github.com/JeongHwan10/the-example-app.nodejs.git'
-				 gitBranchName = 'mater'
+				 gitBranchName = 'master'
 				 name = ''
 				 refspec = ''
 			 }
