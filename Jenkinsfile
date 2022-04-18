@@ -110,10 +110,6 @@ pipeline {
 					kubeconfigId: "${KubeconfigId}",
 					configs: "${yamlFilePath}",
 					enableConfigSubstitution: true,
-					
-					dockerCredentials: [[
-						credentialsId: "${registryCredential}", url: "${registryUrl}"
-					]]
                 )
 			}
 			post {
