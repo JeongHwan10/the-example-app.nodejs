@@ -79,7 +79,7 @@ pipeline {
 			steps {
 				sh 'docker build -t ${DockerUserName}/${ProjectName}:${imageTag} -f ${dockerFile} ${WORKSPACE}/${buildContext}'
 				
-				withDockerRegistry([credentialsId: registryCredential, url: "${registryUrl}"]) {
+				withDockerRegistry([credentialsId: registryCredential, url: ]) {
 					sh 'docker tag $DockerUserName/$ProjectName:$imageTag $DockerUserName/$ProjectName:latest'
 					sh 'docker push $DockerUserName/$ProjectName:$imageTag'
 					sh 'docker push $DockerUserName/$ProjectName:latest'
