@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${ProjectName}-deployment
+  labels:
+    app: ${ProjectName}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${ProjectName}
+  template:
+    metadata:
+      labels:
+        app: ${ProjectName}
+    spec:
+      containers:
+      - name: ${ProjectName}
+        image: ${DockerUserName}/${ProjectName}:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: docker-registry-secret
+      #- name: $KUBERNETES_SECRET_NAME
+      #nodeSelector:
+        #key: docker-desktop
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${ProjectName}-service
+spec:
+  selector:
+    app: ${ProjectName}
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30205
