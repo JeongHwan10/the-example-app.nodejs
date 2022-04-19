@@ -1,24 +1,25 @@
 pipeline {
 	agent any
-	
+
 	triggers {
 		pollSCM '0 5 * * *'
 	}
-	
+
 	options {
 		timestamps()
 		disableConcurrentBuilds()
 	}
-	
+
 	environment {
 		// 이미지 이름
 		ProjectName='git-nodejs'
-		
+
 		DockerUserName='wjdghks1057'
 		registryUrl = "https://docker.io/"
 		registryCredential = 'docker-hub'
+		imageTag = "${BUILD_NUMBER}"
 	}
-	
+
 	stages {
 		stage('Checkout') {
 			 environment {
@@ -29,7 +30,7 @@ pipeline {
 				 name = ''
 				 refspec = ''
 			 }
-		 
+
 		 steps {
 			 checkout changelog: true, poll: true, scm: [
 				 $class: 'GitSCM',
@@ -38,7 +39,7 @@ pipeline {
 						 name: "${env.gitBranchName}"
 					 ]
 				 ],
-				 extensions: [], 
+				 extensions: [],
 				 userRemoteConfigs: [
 					 [
 						 credentialsId: "${env.gitCredentialsId}",
@@ -49,14 +50,14 @@ pipeline {
 				 ]
 			 ]
 		 }
-		 
+
 		 post {
 			 failure {
 				 script { env.FAILURE_STAGE = 'Checkout' }
 			 }
 		 }
 	 }
-	    
+
 	    stage("NodeJS Build") {
             steps {
                 nodejs(nodeJSInstallationName: 'nodejs 17.5.0', configId: '') {
@@ -66,20 +67,19 @@ pipeline {
                 }
     	    }
 	    }
-		
+
 		stage('Docker Build image and push') {
 			environment {
 				dockerFile = 'Dockerfile'
-				imageTag = "${BUILD_NUMBER}"
 				buildContext = ''
-				
+
 				DOCKER_BUILDKIT = 0
 				COMPOSE_DOCKER_CLI_BUILD = 0
 			}
-			
+
 			steps {
 				sh 'docker build -t ${DockerUserName}/${ProjectName}:${imageTag} -f ${dockerFile} ${WORKSPACE}/${buildContext}'
-				
+
 				withDockerRegistry([credentialsId: registryCredential, url: ""]) {
 					sh 'docker tag $DockerUserName/$ProjectName:$imageTag $DockerUserName/$ProjectName:latest'
 					sh 'docker push $DockerUserName/$ProjectName:$imageTag'
@@ -87,9 +87,9 @@ pipeline {
 				}
 			}
 			post {
-				always { 
+				always {
 					sh "docker logout"
-					
+
 					sh "echo Docker image Clean..."
 					sh 'docker rmi $DockerUserName/$ProjectName:$imageTag'
 					// sh 'docker rmi $DockerUserName/$ProjectName:latest'
@@ -99,13 +99,13 @@ pipeline {
 				}
 			}
 		}
-		
+
 		stage('Deploy to k8s') {
 			environment {
 				KubeconfigId = 'Kubeconfig'
 				yamlFilePath = 'Deployment.yaml'
 			}
-			
+
 			steps {
 				kubernetesDeploy(
 					kubeconfigId: "${KubeconfigId}",
@@ -120,7 +120,7 @@ pipeline {
 			}
 		}
 	}
-	
+
 	post {
 		always {
 			script {
