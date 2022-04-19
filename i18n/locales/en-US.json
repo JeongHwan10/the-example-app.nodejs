@@ -13,7 +13,7 @@
   "contentPreviewApiHelp": "This API fetches un-published content from the Content Preview API",
   "locale": "Locale",
   "localeQuestion": "Working with multiple languages? You can query the Content Delivery API for a specific locale.",
-  "settingsLabel": "Settings..4",
+  "settingsLabel": "Settings..web",
   "logoAlt": "Contentful Example App",
   "homeLabel": "Home",
   "coursesLabel": "Courses",
