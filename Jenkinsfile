@@ -59,6 +59,9 @@ pipeline {
 	 }
 
 	    stage("NodeJS Build") {
+			input {
+				message "test input"
+			}
             steps {
                 nodejs(nodeJSInstallationName: 'nodejs 17.5.0', configId: '') {
                     sh '''
