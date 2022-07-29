@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${ProjectName}-deployment
+  name: git-nodejs-deployment
   labels:
     app: ${ProjectName}
 spec:
@@ -9,15 +9,15 @@ spec:
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: ${ProjectName}
+      app: git-nodejs
   template:
     metadata:
       labels:
-        app: ${ProjectName}
+        app: git-nodejs
     spec:
       containers:
-      - name: ${ProjectName}
-        image: ${DockerUserName}/${ProjectName}:${imageTag}
+      - name: git-nodejs
+        image: wjdghks1057/git-nodejs:1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -25,13 +25,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${ProjectName}-service
+  name: git-nodejs-service
 spec:
   selector:
-    app: ${ProjectName}
+    app: git-nodejs
   type: NodePort
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-      nodePort: 30206
+      nodePort: 30306
